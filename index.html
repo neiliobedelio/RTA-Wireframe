@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MetroBuild | Regional Transit Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2e3132",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#424751",
+                    "background": "#f8f9fa",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#021f29",
+                    "surface-container": "#edeeef",
+                    "on-tertiary-fixed": "#331200",
+                    "secondary-container": "#cbe7f5",
+                    "inverse-primary": "#a6c8ff",
+                    "secondary-fixed": "#cbe7f5",
+                    "on-primary-fixed-variant": "#004787",
+                    "tertiary-fixed": "#ffdbca",
+                    "surface-variant": "#e1e3e4",
+                    "on-secondary-fixed-variant": "#304a55",
+                    "on-tertiary-container": "#ffb58d",
+                    "primary-fixed": "#d5e3ff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-highest": "#e1e3e4",
+                    "tertiary": "#652a00",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#4e6874",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#001c3b",
+                    "tertiary-fixed-dim": "#ffb68f",
+                    "surface-bright": "#f8f9fa",
+                    "secondary-fixed-dim": "#afcbd8",
+                    "tertiary-container": "#893b00",
+                    "outline": "#727782",
+                    "surface": "#f8f9fa",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-dim": "#d9dadb",
+                    "on-surface": "#191c1d",
+                    "outline-variant": "#c2c6d3",
+                    "on-background": "#191c1d",
+                    "secondary": "#48626e",
+                    "primary-container": "#00529b",
+                    "surface-tint": "#1d5fa8",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#a5c7ff",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed-dim": "#a6c8ff",
+                    "primary": "#003b72",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#773200"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .blue-gradient {
+        background: linear-gradient(135deg, #003b72 0%, #00529b 100%);
+      }
+      .glass-effect {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      
+      /* Simple slider styles */
+      .slider-container {
+        position: relative;
+        overflow: hidden;
+      }
+      .slider-track {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      .slide {
+        min-width: 100%;
+      }
+      input[type="radio"] {
+        display: none;
+      }
+      #slide1:checked ~ .slider-track { transform: translateX(0%); }
+      #slide2:checked ~ .slider-track { transform: translateX(-100%); }
+      #slide3:checked ~ .slider-track { transform: translateX(-200%); }
+      
+      #slide1:checked ~ .slider-nav label[for="slide1"],
+      #slide2:checked ~ .slider-nav label[for="slide2"],
+      #slide3:checked ~ .slider-nav label[for="slide3"] {
+        background-color: white;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+  .floating-cta-container {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .floating-cta-main {
+    background-color: #00529B;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 2rem 0 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: -4px 4px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .floating-cta-options {
+    display: flex;
+    gap: 8px;
+    padding-right: 12px;
+    opacity: 0;
+    transform: translateX(20px);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .floating-cta-container:hover .floating-cta-options {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .cta-option {
+    background-color: white;
+    color: #00529B;
+    border: 2px solid #00529B;
+    padding: 8px 16px;
+    border-radius: 2rem;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+
+  .cta-option:hover {
+    background-color: #00529B;
+    color: white;
+  }
+</style></head>
+<body class="bg-background text-on-background font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-900 dark:text-blue-400 text-3xl" data-icon="architecture">architecture</span>
+<h1 class="font-public-sans tracking-tight text-3xl font-black text-blue-900 dark:text-blue-400"><span style="letter-spacing: -1.5px;">RTANext</span></h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-blue-900 dark:text-blue-300 font-bold border-b-2 border-blue-900 py-1 transition-colors" href="#">Projects</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">Calendar</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">News</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32">
+<!-- Hero Section with Slideshow -->
+<section class="px-6 py-12 md:py-20 max-w-7xl mx-auto relative h-[600px] md:h-[500px]">
+<div class="slider-container w-full h-full rounded-3xl overflow-hidden shadow-2xl bg-primary absolute inset-0 max-w-7xl mx-auto">
+<input checked="" id="slide1" name="slider" type="radio"/>
+<input id="slide2" name="slider" type="radio"/>
+<input id="slide3" name="slider" type="radio"/>
+<div class="slider-track w-full h-full">
+<!-- Slide 1: Existing Vision -->
+<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<img alt="Strategic Vision" class="absolute inset-0 object-cover w-full h-full opacity-40 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn8I1vBNzwM9cZ5S15OLBTXouhzZwxFX0UeCGir5oYTfkFUSzEkN77OFzNjsRksuZq9faNSoSciVRdpc34DXg_jxc4W7t3yWHogxTppR9DGVGPWBUQZ-uvaLigW4B4z8mKfgvoxedbfB_m4BKtAuOysFGWwP4bwatfWH-RaccTSlxonSuY4k1CUYSvjVkHaod1Md5kTVyU9bcC-pRN8o_UusklpEMG4wemgN9kmLFCGlcc0r-ghs3sZW2OgJEjT2YV5YWKPEZrI2yc"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
+<div class="md:w-3/5 text-white">
+<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+                            Building the Future of Regional Transit
+                        </h2>
+<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+                            Explore the critical infrastructure projects transforming our regional connectivity. From bridge expansions to modern interchanges, track the progress of a better commute.
+                        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-primary px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+                                Explore Active Projects
+                                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="bg-transparent border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors">
+                                View Network Map
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 2: Success Stories -->
+<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<img alt="Success Stories" class="absolute inset-0 object-cover w-full h-full opacity-40 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfQ5X_dnnPipC4J4so8eifffvk3XPPPFTPUUKZDv8Q7eBlmR0ZQWGQDgP_P_928rqHK8XP8gN5rNXpxBsGUvt01nkAe5ruUXpz19Kv9pAxVSzK8shbcJBwrZdQQUqR_-uLmVoyOoEh0guvH02tlnG7rrhrZO5ltNenYUMjBjksLnvLddSNZBm49XdDSgeAF5E-GPySBHRjophzqeC6j4vvt7TsolT1xwopLnAiPHHnILDBTh-i7l1wSRnVSl7k2reqDxZTmW6VI22i"/>
+<div class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
+<div class="md:w-3/5 text-white">
+<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+                            Milestones Achieved
+                        </h2>
+<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+                            Discover the impact of completed phases. Real communities experiencing faster, safer commutes thanks to strategic infrastructure investments.
+                        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-secondary px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+                                Read Success Stories
+                                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 3: Active Projects -->
+<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<img alt="Active Projects" class="absolute inset-0 object-cover w-full h-full opacity-40 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWYAm64HeRjc1J6l81WhjZJ8jHF8RgTkYM5S4VTWzHxUC9Bv7VYrgQ53FS_WAiQdclTa5E91eQySx_R8CTCmcZKF8BKCdTCqo0cBdCv02ziaKnOVe1V9d9W3VaYH4jDvPqfojdm1OS7v9EbEtcf16wQczXXbO-gErQ49XbD2O9X1iZgT2o0p1TZXYs0AG6NO0HZpmJeZWIH1YrNfd7OEdCQVwsGPacHu7NvwCXYCEcQLphsm2TmmYZF7TzgFcjawWeDf_WO8TT0XH3"/>
+<div class="absolute inset-0 bg-gradient-to-r from-tertiary-container via-tertiary-container/80 to-transparent"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
+<div class="md:w-3/5 text-white">
+<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+                            Progress in Motion
+                        </h2>
+<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+                            Witness the ongoing transformation. Stay updated on real-time construction progress and upcoming milestones across all active corridors.
+                        </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-tertiary-container px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+                                View Construction Updates
+                                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slider Navigation -->
+<div class="slider-nav absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide1"></label>
+<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide2"></label>
+<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide3"></label>
+</div>
+</div>
+</section>
+<!-- Stats Section -->
+<section class="bg-surface-container-low py-16 mb-20 mt-8">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+<div class="space-y-1">
+<p class="text-4xl md:text-5xl font-black text-primary">12</p>
+<p class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Active Projects</p>
+</div>
+<div class="space-y-1">
+<p class="text-4xl md:text-5xl font-black text-tertiary">4</p>
+<p class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Upcoming Sites</p>
+</div>
+<div class="space-y-1">
+<p class="text-4xl md:text-5xl font-black text-primary-tint">$2.4B</p>
+<p class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Regional Investment</p>
+</div>
+<div class="space-y-1">
+<p class="text-4xl md:text-5xl font-black text-primary">2026</p>
+<p class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Corridor Completion</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Map Section -->
+<section class="px-6 max-w-7xl mx-auto mb-24">
+<div class="flex justify-between items-end mb-8">
+<div>
+<p class="text-surface-tint font-black uppercase tracking-widest text-sm mb-2">Network Overview</p>
+<h3 class="text-4xl font-black font-headline tracking-tight text-primary">Interactive Corridor Map</h3>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-6 bg-surface-container-low rounded-2xl p-4 md:p-6 shadow-sm border border-outline-variant/20">
+<!-- Map Area -->
+<div class="w-full md:w-2/3 h-[400px] md:h-[500px] bg-slate-200 rounded-xl relative overflow-hidden group">
+<!-- Simulated Map Image -->
+<img alt="Corridor Map" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA97DVDZnnKXUDz3z9P_OM308tQ2UyM0iLdot5HH_PtP02QKWqaiaMmO22bGFHJKXW82b2rJKkQPWPM2n3hjenncIP3K1hZB7XMcmWZEIIAQzVloVBKNopterhnwD4sZbu0Yg5N1INPHmOMYBv_f5AjAOzMfvsPxSrdH09Z9z91IT-cRLkaLSUok6TkjSvBukisWsbHFHGH9hF9kGonxdlniIxAWlGdtiJCtC-IMtspGbOJCeM4nPaSn8qS9pAJYXwBfntNb-2dvGON"/>
+<!-- Map Markers -->
+<!-- Marker 1: I-10 Bridge -->
+<button class="absolute top-[30%] left-[45%] group/marker outline-none">
+<div class="relative">
+<span class="material-symbols-outlined text-4xl text-tertiary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
+<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded shadow-md text-xs font-bold whitespace-nowrap opacity-0 group-hover/marker:opacity-100 group-focus/marker:opacity-100 transition-opacity z-20 pointer-events-none">I-10 Bridge</div>
+</div>
+</button>
+<!-- Marker 2: Downtown Interchange -->
+<button class="absolute top-[50%] left-[60%] group/marker outline-none">
+<div class="relative">
+<span class="material-symbols-outlined text-4xl text-primary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
+<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded shadow-md text-xs font-bold whitespace-nowrap opacity-0 group-hover/marker:opacity-100 group-focus/marker:opacity-100 transition-opacity z-20 pointer-events-none">Downtown Interchange</div>
+</div>
+</button>
+<!-- Marker 3: West Portal -->
+<button class="absolute top-[65%] left-[25%] group/marker outline-none">
+<div class="relative">
+<span class="material-symbols-outlined text-4xl text-tertiary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
+<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded shadow-md text-xs font-bold whitespace-nowrap opacity-0 group-hover/marker:opacity-100 group-focus/marker:opacity-100 transition-opacity z-20 pointer-events-none">West Portal Link</div>
+</div>
+</button>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow text-xs font-medium space-y-2">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-tertiary-fixed"></div><span>In Progress</span></div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary-fixed"></div><span>Planned</span></div>
+</div>
+</div>
+<!-- Info Panel (Simulating selected state for I-10 Bridge) -->
+<div class="w-full md:w-1/3 bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col">
+<div class="mb-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider inline-block mb-3">
+                    In Progress
+                </span>
+<h4 class="text-2xl font-black font-headline text-primary mb-2">I-10 Bridge Expansion</h4>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-semibold mb-4 pb-4 border-b border-outline-variant/20">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                    Central Segment
+                </div>
+</div>
+<div class="flex-grow">
+<img alt="I-10 Bridge Expansion" class="object-cover w-full h-32 rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSRwXDJUjPC1UMeTUw7GfhU_ST4yUfijkF3SnFLN2jR0MpMBkx8sqDSzNhORX3qU9FHY05OiYdKxk82Hvcj6sf2uddw8iH1UIFHlQ4Bl-4O15EnPyIKebhQdXVAb4Cu7s9YPdiMuV6m_L_iggfsW7YqVELOLFo3kimUGG0KpqRw93UiA6H0qMYmBKqCUCkBNEbGNvLJOJBePe8hQ_59mcrL6qIdEl3qARia2JFqBk7PLYwiML214ccllbqz-wT4_JRq_1WwJqHwglL"/>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                    Major capacity upgrades to the regional transit artery, introducing smart-lane technology and expanded freight corridors.
+                </p>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs font-bold mb-1">
+<span>Overall Progress</span>
+<span class="text-primary">68%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 68%"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-3 bg-surface-container hover:bg-surface-container-high text-primary font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+                Project Details
+                <span class="material-symbols-outlined text-sm" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Featured Projects -->
+<section class="px-6 max-w-7xl mx-auto mb-24">
+<div class="flex justify-between items-end mb-12">
+<div>
+<p class="text-surface-tint font-black uppercase tracking-widest text-sm mb-2">Featured Corridors</p>
+<h3 class="text-4xl font-black font-headline tracking-tight text-primary">I-10 Corridor Expansion</h3>
+</div>
+<button class="hidden md:flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+                    View All Projects
+                    <span class="material-symbols-outlined" data-icon="trending_flat">trending_flat</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Project Card 1 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 relative">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-tertiary-fixed z-10"></div>
+<div class="aspect-video relative overflow-hidden">
+<img alt="I-10 Bridge Expansion" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSRwXDJUjPC1UMeTUw7GfhU_ST4yUfijkF3SnFLN2jR0MpMBkx8sqDSzNhORX3qU9FHY05OiYdKxk82Hvcj6sf2uddw8iH1UIFHlQ4Bl-4O15EnPyIKebhQdXVAb4Cu7s9YPdiMuV6m_L_iggfsW7YqVELOLFo3kimUGG0KpqRw93UiA6H0qMYmBKqCUCkBNEbGNvLJOJBePe8hQ_59mcrL6qIdEl3qARia2JFqBk7PLYwiML214ccllbqz-wT4_JRq_1WwJqHwglL"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider">
+                            In Progress
+                        </div>
+</div>
+<div class="p-8">
+<h4 class="text-2xl font-black font-headline text-primary mb-3">I-10 Bridge Expansion</h4>
+<p class="text-on-surface-variant leading-relaxed mb-6">
+                            Major capacity upgrades to the regional transit artery, introducing smart-lane technology and expanded freight corridors.
+                        </p>
+<div class="flex items-center justify-between pt-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                                Central Segment
+                            </div>
+<div class="text-primary font-bold text-sm">68% Complete</div>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 relative">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-primary-fixed z-10"></div>
+<div class="aspect-video relative overflow-hidden">
+<img alt="Downtown Interchange" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC20VHRXkedV6XXR0-pA6BzPc5teMTLy3bFMC9CdurdYYpyoOG2TPlUgD1lTLS21phWvp5VpE7D872aK80RuWa1EVT-b-1m2oopAwq-gkc_GqnRRAmWlwk6HDNu62-IGkYLRCZyl9paK_O-PXB7P8UfjP3R0IorOZjBb-rkEesnJ_tV0WjvvACB51Fn1VOnugPHE3WZYXWBdx0g_7XIn2qIbBALpvDOgDYEMycLIwJ0HBvGS1Mu0f70UPVz3rZO9cxvj5a19zzsxi8f"/>
+<div class="absolute top-4 right-4 bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider">
+                            Planned
+                        </div>
+</div>
+<div class="p-8">
+<h4 class="text-2xl font-black font-headline text-primary mb-3">Downtown Interchange Modernization</h4>
+<p class="text-on-surface-variant leading-relaxed mb-6">
+                            Reimagining the city center's primary junction with multi-modal hubs and subterranean logistics tunnels.
+                        </p>
+<div class="flex items-center justify-between pt-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                                Metro District
+                            </div>
+<div class="text-primary font-bold text-sm">Design Phase</div>
+</div>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 relative">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-tertiary-fixed z-10"></div>
+<div class="aspect-video relative overflow-hidden">
+<img alt="West Corridor" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq6nVJpS8VdXc7rXyJda5D_PAUJiUdxIi3FHWnbPTvm5ADQ1FkAcjEdx6jyBqm-VrGGDUyjS2a1EGthNZz7I5MZ-jvZnk8D3FZAGR2HqXCbmkhOI48wFRN8ohyhBSVf7CtFJxHBi6zOgUhO9uEzywrCuKv5zRgXQAn9mMGuSdaoz8r21cIpxmxXBpBdUKEya0b_vvmyHI1rQA4ftI0c10LbZFB2Mwo9kc7yXR7DBdec59sMOW7o6NAq3EvzK840N4-r0nYBPHmlZbq"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider">
+                            In Progress
+                        </div>
+</div>
+<div class="p-8">
+<h4 class="text-2xl font-black font-headline text-primary mb-3">West Portal Light Rail Link</h4>
+<p class="text-on-surface-variant leading-relaxed mb-6">
+                            Connecting the suburban perimeter to the downtown core through high-speed sustainable transit infrastructure.
+                        </p>
+<div class="flex items-center justify-between pt-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                                West Valley
+                            </div>
+<div class="text-primary font-bold text-sm">42% Complete</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Voices of the Community Section -->
+<section class="bg-surface-container-low py-24 mb-24">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<p class="text-surface-tint font-black uppercase tracking-widest text-sm mb-2">Community Perspectives</p>
+<h3 class="text-4xl font-black font-headline tracking-tight text-primary">Voices of the Community</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/10 relative">
+<div class="absolute -top-6 left-8 w-12 h-12 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img alt="Stakeholder" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzgiQtbeDtd8XU-ZNAaaCyjo1Q7OfetukSNYO7LaBvA8syd2MGXRtMpf6RK3TFFd2dgmxxaENfs13OnUdjSBUHM-4vgrat2mVeLncV_9FU13JQF8w1d024mtm4vyWsuUsRfJuFnYC9pCASUW7gWfgWw45cRofdK8AMVSnrFMAeoUSGZRzHW38L7xjdupVwc_znnv3MrMh_0bujKWD9NJsJwIxbhYGBhVIoHx6tGzlXDiul9kD1tt7DF9CZB7OSB3o6NyYfEILtEb7U"/>
+</div>
+<p class="text-on-surface-variant italic mb-6 pt-4">"The bridge expansion will significantly cut delivery times for my shop. It’s an investment in local business growth."</p>
+<div>
+<p class="font-black text-primary">David Chen</p>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Small Business Owner</p>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/10 relative">
+<div class="absolute -top-6 left-8 w-12 h-12 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img alt="Stakeholder" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLh8Pz9p7uVQ32hrc1FdOHAjeXw_WGzmifC5XXnMvBt5zxtAQa5AlT9uPZBAgggXs3QPg90tsbGtdxX5p87iKRxYKL4EKMfNl6J4BUYynMNV33ArpjkHrxfNYNJKSUOUJzAIgUpqb74C8gukHAd2_LiEvL_VkrDZUkaani-eLH94n8zuopr1ScI7uIncqJr5olRKQ24jM08F6G_9Eu_vd7u1bP_d2zbdvUVUCyxlMvZtpBrx7s3-x2UTXC1wuq7n7NKwLiYYW36Gd7"/>
+</div>
+<p class="text-on-surface-variant italic mb-6 pt-4">"Safety is my main concern as a parent. Seeing the safety-first design for the new interchanges gives me real peace of mind."</p>
+<div>
+<p class="font-black text-primary">Sarah Miller</p>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Local Resident</p>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/10 relative">
+<div class="absolute -top-6 left-8 w-12 h-12 rounded-full overflow-hidden border-4 border-white shadow-md">
+<img alt="Stakeholder" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2aZQd7wlIpsmLc3hlTiDQd_m9Jaxu6_qw6PR0gOam-DI561qQlZnIvu2JOdYyjxLXvJpmS6H77la-4Mt-CB44T8vjnwXnRRTLOw_Q7ST5EC6_M37Wvc12nXj3du7DvImU8ryAWGZhRdgXd6JFluvjOmFtwpuVNFgPrg91axAmsSBCytkEl13J9itSoz5UHouuSu3mTeF9fEvcgI6BhOom95hzVV_pR4txGqaKGtt3UN9uzSAz7c4gckyuYzrmZIrR2VscGJ6kRfuU"/>
+</div>
+<p class="text-on-surface-variant italic mb-6 pt-4">"We are aligning transit growth with urban density. This corridor is the backbone of our 2030 sustainable city plan."</p>
+<div>
+<p class="font-black text-primary">Marcus Thorne</p>
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">City Planner</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Q&A Section -->
+<section class="max-w-4xl mx-auto px-6 mb-32 text-center">
+<div class="bg-primary p-12 rounded-[2rem] shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+<div class="relative z-10">
+<h3 class="text-3xl md:text-4xl font-black text-white mb-6">Questions &amp; Answers</h3>
+<p class="text-white/80 text-lg font-medium mb-10 max-w-xl mx-auto">
+                Have a specific question about a project in your neighborhood? Our team and automated assistant are here to help.
+            </p>
+<div class="max-w-md mx-auto relative group">
+<input class="w-full bg-white/10 border border-white/20 rounded-full py-4 px-6 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all" placeholder="Ask a question about the I-10 project..." type="text"/>
+<button class="absolute right-2 top-2 bottom-2 bg-white text-primary rounded-full px-6 font-bold flex items-center gap-2 hover:bg-slate-100 transition-colors active:scale-95">
+                    Chat
+                    <span class="material-symbols-outlined text-sm" data-icon="forum">forum</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50 pb-safe">
+<button class="flex flex-col items-center justify-center bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-100 rounded-xl px-4 py-1.5 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="format_list_bulleted">format_list_bulleted</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Projects</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 active:scale-90 transition-transform hover:text-blue-700 dark:hover:text-blue-300">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 active:scale-90 transition-transform hover:text-blue-700 dark:hover:text-blue-300">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Calendar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-4 py-1.5 active:scale-90 transition-transform hover:text-blue-700 dark:hover:text-blue-300">
+<span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">News</span>
+</button>
+</nav>
+<!-- Footer for Web -->
+<footer class="hidden md:block bg-surface-container-high py-20">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-blue-900 text-3xl" data-icon="architecture">architecture</span>
+<h1 class="font-public-sans tracking-tight text-3xl font-black text-blue-900">MetroBuild</h1>
+</div>
+<p class="text-on-surface-variant max-w-sm font-medium">
+                    The official transparency portal for regional transit and infrastructure development. Committed to building a connected future.
+                </p>
+</div>
+<div>
+<h5 class="font-bold uppercase tracking-widest text-xs text-primary mb-6">Resources</h5>
+<ul class="space-y-4">
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Project Archive</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Budget Reports</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Impact Studies</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold uppercase tracking-widest text-xs text-primary mb-6">Contact</h5>
+<ul class="space-y-4">
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Media Center</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Public Feedback</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary transition-colors font-semibold" href="#">Careers</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 pt-12 mt-12 border-t border-outline-variant/20 flex justify-between text-sm text-on-surface-variant font-medium">
+<p>© 2024 Regional Transit Authority. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Accessibility</a>
+</div>
+</div>
+</footer>
+<div class="floating-cta-container group">
+<div class="floating-cta-main">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">notifications</span>
+<span>Get Updates</span>
+</div>
+<div class="floating-cta-options">
+<button class="cta-option flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">sms</span>
+      Text Alerts
+    </button>
+<button class="cta-option flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+      Email Updates
+    </button>
+</div>
+</div></body></html>
