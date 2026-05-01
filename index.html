@@ -88,29 +88,62 @@
         -webkit-backdrop-filter: blur(20px);
       }
       
-      /* Simple slider styles */
+      /* Hero Slider styles */
       .slider-container {
         position: relative;
         overflow: hidden;
       }
-      .slider-track {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-      }
       .slide {
-        min-width: 100%;
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        z-index: 0;
       }
-      input[type="radio"] {
-        display: none;
+      .slide.active {
+        opacity: 1;
+        z-index: 10;
       }
-      #slide1:checked ~ .slider-track { transform: translateX(0%); }
-      #slide2:checked ~ .slider-track { transform: translateX(-100%); }
-      #slide3:checked ~ .slider-track { transform: translateX(-200%); }
-      
-      #slide1:checked ~ .slider-nav label[for="slide1"],
-      #slide2:checked ~ .slider-nav label[for="slide2"],
-      #slide3:checked ~ .slider-nav label[for="slide3"] {
+      .slide.active img {
+        transform: scale(1.05);
+        transition: transform 6s linear;
+      }
+      .slide img {
+        transform: scale(1);
+        transition: transform 0.8s ease-in-out;
+      }
+
+      /* Timeline progress styles */
+      .timeline-progress-bg {
+        background-color: rgba(255, 255, 255, 0.3);
+        height: 4px;
+        width: 100%;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .timeline-progress-fill {
         background-color: white;
+        height: 100%;
+        width: 0%;
+        transform-origin: left;
+      }
+      .timeline-item.active .timeline-progress-fill {
+        animation: progress-fill 6s linear forwards;
+      }
+      
+      @keyframes progress-fill {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+      
+      .timeline-item {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+      }
+      .timeline-item:hover,
+      .timeline-item.active {
+        opacity: 1;
       }
     </style>
 <style>
@@ -205,30 +238,26 @@
 </header>
 <main class="pt-24 pb-32">
 <!-- Hero Section with Slideshow -->
-<section class="px-6 py-12 md:py-20 max-w-7xl mx-auto relative h-[600px] md:h-[500px]">
-<div class="slider-container w-full h-full rounded-3xl overflow-hidden shadow-2xl bg-primary absolute inset-0 max-w-7xl mx-auto">
-<input checked="" id="slide1" name="slider" type="radio"/>
-<input id="slide2" name="slider" type="radio"/>
-<input id="slide3" name="slider" type="radio"/>
-<div class="slider-track w-full h-full">
+<section class="px-6 py-12 md:py-20 max-w-7xl mx-auto relative h-[600px] md:h-[650px]">
+<div id="hero-slider" class="slider-container w-full h-full rounded-3xl overflow-hidden shadow-2xl absolute inset-0 max-w-7xl mx-auto bg-slate-900 group">
 <!-- Slide 1: Existing Vision -->
-<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<div class="slide active">
 <img alt="Strategic Vision" class="absolute inset-0 object-cover w-full h-full" src="images/bridge.png"/>
-<div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
-<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
-<div class="md:w-3/5 text-white">
-<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-8 md:p-16 pb-32 md:pb-36 z-20 flex flex-col justify-end">
+<div class="md:w-3/4 lg:w-2/3 text-white">
+<h2 class="text-4xl md:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[1.05] mb-6">
                             Building the Future of Regional Transit
                         </h2>
-<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+<p class="text-lg md:text-xl text-white/90 max-w-2xl font-medium leading-relaxed mb-8">
                             Explore the critical infrastructure projects transforming our regional connectivity. From bridge expansions to modern interchanges, track the progress of a better commute.
                         </p>
 <div class="flex flex-wrap gap-4">
-<button class="bg-white text-primary px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+<button class="bg-white text-slate-900 px-8 py-4 rounded-full font-bold shadow-lg hover:bg-slate-100 active:scale-95 transition-all flex items-center gap-2">
                                 Explore Active Projects
                                 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </button>
-<button class="bg-transparent border border-white/30 text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors">
+<button class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white/10 transition-colors">
                                 View Network Map
                             </button>
 </div>
@@ -236,19 +265,19 @@
 </div>
 </div>
 <!-- Slide 2: Success Stories -->
-<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<div class="slide">
 <img alt="Success Stories" class="absolute inset-0 object-cover w-full h-full" src="images/hub.png"/>
-<div class="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent"></div>
-<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
-<div class="md:w-3/5 text-white">
-<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-8 md:p-16 pb-32 md:pb-36 z-20 flex flex-col justify-end">
+<div class="md:w-3/4 lg:w-2/3 text-white">
+<h2 class="text-4xl md:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[1.05] mb-6">
                             Milestones Achieved
                         </h2>
-<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+<p class="text-lg md:text-xl text-white/90 max-w-2xl font-medium leading-relaxed mb-8">
                             Discover the impact of completed phases. Real communities experiencing faster, safer commutes thanks to strategic infrastructure investments.
                         </p>
 <div class="flex flex-wrap gap-4">
-<button class="bg-white text-secondary px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+<button class="bg-white text-slate-900 px-8 py-4 rounded-full font-bold shadow-lg hover:bg-slate-100 active:scale-95 transition-all flex items-center gap-2">
                                 Read Success Stories
                                 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </button>
@@ -257,19 +286,19 @@
 </div>
 </div>
 <!-- Slide 3: Active Projects -->
-<div class="slide relative flex items-center justify-center p-8 md:p-16">
+<div class="slide">
 <img alt="Active Projects" class="absolute inset-0 object-cover w-full h-full" src="images/construction.png"/>
-<div class="absolute inset-0 bg-gradient-to-r from-tertiary-container via-tertiary-container/80 to-transparent"></div>
-<div class="relative z-10 flex flex-col md:flex-row gap-12 items-center w-full">
-<div class="md:w-3/5 text-white">
-<h2 class="text-5xl md:text-7xl font-black font-headline tracking-tighter leading-[0.95] mb-6">
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-8 md:p-16 pb-32 md:pb-36 z-20 flex flex-col justify-end">
+<div class="md:w-3/4 lg:w-2/3 text-white">
+<h2 class="text-4xl md:text-6xl lg:text-7xl font-black font-headline tracking-tighter leading-[1.05] mb-6">
                             Progress in Motion
                         </h2>
-<p class="text-lg md:text-xl text-white/80 max-w-2xl font-medium leading-relaxed mb-10">
+<p class="text-lg md:text-xl text-white/90 max-w-2xl font-medium leading-relaxed mb-8">
                             Witness the ongoing transformation. Stay updated on real-time construction progress and upcoming milestones across all active corridors.
                         </p>
 <div class="flex flex-wrap gap-4">
-<button class="bg-white text-tertiary-container px-8 py-4 rounded-full font-bold shadow-lg shadow-black/10 active:scale-95 transition-transform flex items-center gap-2">
+<button class="bg-white text-slate-900 px-8 py-4 rounded-full font-bold shadow-lg hover:bg-slate-100 active:scale-95 transition-all flex items-center gap-2">
                                 View Construction Updates
                                 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </button>
@@ -277,12 +306,32 @@
 </div>
 </div>
 </div>
+<!-- Timeline Navigation -->
+<div class="absolute bottom-0 left-0 w-full px-6 md:px-12 pb-6 md:pb-8 z-30 flex gap-4 md:gap-6 bg-gradient-to-t from-black/80 to-transparent pt-12">
+<!-- Item 1 -->
+<div class="timeline-item active flex-1 group" data-index="0">
+<div class="timeline-progress-bg mb-3">
+<div class="timeline-progress-fill"></div>
 </div>
-<!-- Slider Navigation -->
-<div class="slider-nav absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
-<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide1"></label>
-<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide2"></label>
-<label class="w-3 h-3 rounded-full bg-white/40 cursor-pointer hover:bg-white/80 transition-colors" for="slide3"></label>
+<p class="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1 group-hover:text-white transition-colors">Vision</p>
+<p class="text-white font-bold text-sm md:text-base leading-tight line-clamp-2 group-hover:text-white transition-colors">Building the Future</p>
+</div>
+<!-- Item 2 -->
+<div class="timeline-item flex-1 group" data-index="1">
+<div class="timeline-progress-bg mb-3">
+<div class="timeline-progress-fill"></div>
+</div>
+<p class="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1 group-hover:text-white transition-colors">Milestone</p>
+<p class="text-white font-bold text-sm md:text-base leading-tight line-clamp-2 group-hover:text-white transition-colors">Milestones Achieved</p>
+</div>
+<!-- Item 3 -->
+<div class="timeline-item flex-1 group" data-index="2">
+<div class="timeline-progress-bg mb-3">
+<div class="timeline-progress-fill"></div>
+</div>
+<p class="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1 group-hover:text-white transition-colors">Construction</p>
+<p class="text-white font-bold text-sm md:text-base leading-tight line-clamp-2 group-hover:text-white transition-colors">Progress in Motion</p>
+</div>
 </div>
 </div>
 </section>
@@ -604,4 +653,56 @@
       Email Updates
     </button>
 </div>
-</div></body></html>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const slides = document.querySelectorAll('.slide');
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    let currentIndex = 0;
+    let autoPlayInterval;
+    const slideDuration = 6000; // 6 seconds
+
+    function goToSlide(index) {
+      // Remove active classes
+      slides[currentIndex].classList.remove('active');
+      timelineItems[currentIndex].classList.remove('active');
+      
+      // Force reflow on the new active progress bar to restart animation
+      const nextProgressFill = timelineItems[index].querySelector('.timeline-progress-fill');
+      nextProgressFill.style.animation = 'none';
+      nextProgressFill.offsetHeight; /* trigger reflow */
+      nextProgressFill.style.animation = null;
+
+      // Add active classes to new index
+      slides[index].classList.add('active');
+      timelineItems[index].classList.add('active');
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % slides.length;
+      goToSlide(nextIndex);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayInterval = setInterval(nextSlide, slideDuration);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayInterval) clearInterval(autoPlayInterval);
+    }
+
+    // Add click listeners to timeline items
+    timelineItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        goToSlide(index);
+        startAutoPlay(); // Reset timer on manual click
+      });
+    });
+
+    // Start auto-play initially
+    startAutoPlay();
+  });
+</script>
+</body></html>
