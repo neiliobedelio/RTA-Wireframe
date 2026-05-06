@@ -373,7 +373,7 @@
 <img alt="Corridor Map" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA97DVDZnnKXUDz3z9P_OM308tQ2UyM0iLdot5HH_PtP02QKWqaiaMmO22bGFHJKXW82b2rJKkQPWPM2n3hjenncIP3K1hZB7XMcmWZEIIAQzVloVBKNopterhnwD4sZbu0Yg5N1INPHmOMYBv_f5AjAOzMfvsPxSrdH09Z9z91IT-cRLkaLSUok6TkjSvBukisWsbHFHGH9hF9kGonxdlniIxAWlGdtiJCtC-IMtspGbOJCeM4nPaSn8qS9pAJYXwBfntNb-2dvGON"/>
 <!-- Map Markers -->
 <!-- Marker 1: I-10 Bridge -->
-<button class="absolute top-[30%] left-[45%] group/marker outline-none">
+<button class="absolute top-[30%] left-[45%] group/marker outline-none map-marker transition-transform hover:scale-110" data-project-id="i10">
 <div class="relative">
 <span class="material-symbols-outlined text-4xl text-tertiary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
 <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
@@ -381,7 +381,7 @@
 </div>
 </button>
 <!-- Marker 2: Downtown Interchange -->
-<button class="absolute top-[50%] left-[60%] group/marker outline-none">
+<button class="absolute top-[50%] left-[60%] group/marker outline-none map-marker transition-transform hover:scale-110" data-project-id="downtown">
 <div class="relative">
 <span class="material-symbols-outlined text-4xl text-primary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
 <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
@@ -389,7 +389,7 @@
 </div>
 </button>
 <!-- Marker 3: West Portal -->
-<button class="absolute top-[65%] left-[25%] group/marker outline-none">
+<button class="absolute top-[65%] left-[25%] group/marker outline-none map-marker transition-transform hover:scale-110" data-project-id="west">
 <div class="relative">
 <span class="material-symbols-outlined text-4xl text-tertiary-fixed shadow-sm drop-shadow-md drop-shadow-primary z-10 relative group-focus/marker:text-primary transition-colors" data-icon="location_on">location_on</span>
 <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full z-0"></span>
@@ -402,30 +402,30 @@
 </div>
 </div>
 <!-- Info Panel (Simulating selected state for I-10 Bridge) -->
-<div class="w-full md:w-1/3 bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col">
+<div class="w-full md:w-1/3 bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col transition-all duration-300" id="info-panel">
 <div class="mb-4">
-<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider inline-block mb-3">
+<span id="info-status" class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider inline-block mb-3 transition-colors">
                     In Progress
                 </span>
-<h4 class="text-2xl font-black font-headline text-primary mb-2">I-10 Bridge Expansion</h4>
+<h4 id="info-title" class="text-2xl font-black font-headline text-primary mb-2 transition-opacity">I-10 Bridge Expansion</h4>
 <div class="flex items-center gap-2 text-on-surface-variant text-sm font-semibold mb-4 pb-4 border-b border-outline-variant/20">
 <span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
-                    Central Segment
+                    <span id="info-segment" class="transition-opacity">Central Segment</span>
                 </div>
 </div>
 <div class="flex-grow">
-<img alt="I-10 Bridge Expansion" class="object-cover w-full h-32 rounded-lg mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSRwXDJUjPC1UMeTUw7GfhU_ST4yUfijkF3SnFLN2jR0MpMBkx8sqDSzNhORX3qU9FHY05OiYdKxk82Hvcj6sf2uddw8iH1UIFHlQ4Bl-4O15EnPyIKebhQdXVAb4Cu7s9YPdiMuV6m_L_iggfsW7YqVELOLFo3kimUGG0KpqRw93UiA6H0qMYmBKqCUCkBNEbGNvLJOJBePe8hQ_59mcrL6qIdEl3qARia2JFqBk7PLYwiML214ccllbqz-wT4_JRq_1WwJqHwglL"/>
-<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+<img id="info-image" alt="I-10 Bridge Expansion" class="object-cover w-full h-32 rounded-lg mb-4 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSRwXDJUjPC1UMeTUw7GfhU_ST4yUfijkF3SnFLN2jR0MpMBkx8sqDSzNhORX3qU9FHY05OiYdKxk82Hvcj6sf2uddw8iH1UIFHlQ4Bl-4O15EnPyIKebhQdXVAb4Cu7s9YPdiMuV6m_L_iggfsW7YqVELOLFo3kimUGG0KpqRw93UiA6H0qMYmBKqCUCkBNEbGNvLJOJBePe8hQ_59mcrL6qIdEl3qARia2JFqBk7PLYwiML214ccllbqz-wT4_JRq_1WwJqHwglL"/>
+<p id="info-desc" class="text-on-surface-variant text-sm leading-relaxed mb-6 transition-opacity">
                     Major capacity upgrades to the regional transit artery, introducing smart-lane technology and expanded freight corridors.
                 </p>
-<div class="space-y-3">
+<div id="info-progress-section" class="space-y-3 transition-opacity">
 <div>
 <div class="flex justify-between text-xs font-bold mb-1">
 <span>Overall Progress</span>
-<span class="text-primary">68%</span>
+<span id="info-progress-text" class="text-primary">68%</span>
 </div>
 <div class="w-full bg-surface-variant rounded-full h-2">
-<div class="bg-primary h-2 rounded-full" style="width: 68%"></div>
+<div id="info-progress-bar" class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 68%"></div>
 </div>
 </div>
 </div>
@@ -703,6 +703,110 @@
 
     // Start auto-play initially
     startAutoPlay();
+
+    // Map Interactivity
+    const mapMarkers = document.querySelectorAll('.map-marker');
+    const projectsData = {
+      'i10': {
+        title: 'I-10 Bridge Expansion',
+        status: 'In Progress',
+        statusClass: 'bg-tertiary-fixed text-on-tertiary-fixed',
+        segment: 'Central Segment',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDSRwXDJUjPC1UMeTUw7GfhU_ST4yUfijkF3SnFLN2jR0MpMBkx8sqDSzNhORX3qU9FHY05OiYdKxk82Hvcj6sf2uddw8iH1UIFHlQ4Bl-4O15EnPyIKebhQdXVAb4Cu7s9YPdiMuV6m_L_iggfsW7YqVELOLFo3kimUGG0KpqRw93UiA6H0qMYmBKqCUCkBNEbGNvLJOJBePe8hQ_59mcrL6qIdEl3qARia2JFqBk7PLYwiML214ccllbqz-wT4_JRq_1WwJqHwglL',
+        desc: 'Major capacity upgrades to the regional transit artery, introducing smart-lane technology and expanded freight corridors.',
+        progress: '68%',
+        hasProgressBar: true
+      },
+      'downtown': {
+        title: 'Downtown Interchange Modernization',
+        status: 'Planned',
+        statusClass: 'bg-primary-fixed text-on-primary-fixed',
+        segment: 'Metro District',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC20VHRXkedV6XXR0-pA6BzPc5teMTLy3bFMC9CdurdYYpyoOG2TPlUgD1lTLS21phWvp5VpE7D872aK80RuWa1EVT-b-1m2oopAwq-gkc_GqnRRAmWlwk6HDNu62-IGkYLRCZyl9paK_O-PXB7P8UfjP3R0IorOZjBb-rkEesnJ_tV0WjvvACB51Fn1VOnugPHE3WZYXWBdx0g_7XIn2qIbBALpvDOgDYEMycLIwJ0HBvGS1Mu0f70UPVz3rZO9cxvj5a19zzsxi8f',
+        desc: 'Reimagining the city center\'s primary junction with multi-modal hubs and subterranean logistics tunnels.',
+        progress: 'Design Phase',
+        hasProgressBar: false
+      },
+      'west': {
+        title: 'West Portal Light Rail Link',
+        status: 'In Progress',
+        statusClass: 'bg-tertiary-fixed text-on-tertiary-fixed',
+        segment: 'West Valley',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAq6nVJpS8VdXc7rXyJda5D_PAUJiUdxIi3FHWnbPTvm5ADQ1FkAcjEdx6jyBqm-VrGGDUyjS2a1EGthNZz7I5MZ-jvZnk8D3FZAGR2HqXCbmkhOI48wFRN8ohyhBSVf7CtFJxHBi6zOgUhO9uEzywrCuKv5zRgXQAn9mMGuSdaoz8r21cIpxmxXBpBdUKEya0b_vvmyHI1rQA4ftI0c10LbZFB2Mwo9kc7yXR7DBdec59sMOW7o6NAq3EvzK840N4-r0nYBPHmlZbq',
+        desc: 'Connecting the suburban perimeter to the downtown core through high-speed sustainable transit infrastructure.',
+        progress: '42%',
+        hasProgressBar: true
+      }
+    };
+
+    mapMarkers.forEach(marker => {
+      marker.addEventListener('click', () => {
+        const projectId = marker.dataset.projectId;
+        const project = projectsData[projectId];
+        
+        if (project) {
+          const infoPanel = document.getElementById('info-panel');
+          const elementsToAnimate = [
+            document.getElementById('info-title'),
+            document.getElementById('info-segment'),
+            document.getElementById('info-image'),
+            document.getElementById('info-desc'),
+            document.getElementById('info-progress-section')
+          ];
+          
+          // Fade out
+          elementsToAnimate.forEach(el => {
+            if(el) el.style.opacity = '0';
+          });
+          
+          setTimeout(() => {
+            const statusEl = document.getElementById('info-status');
+            statusEl.textContent = project.status;
+            statusEl.className = `${project.statusClass} px-3 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider inline-block mb-3 transition-colors`;
+            
+            document.getElementById('info-title').textContent = project.title;
+            document.getElementById('info-segment').textContent = project.segment;
+            document.getElementById('info-image').src = project.image;
+            document.getElementById('info-image').alt = project.title;
+            document.getElementById('info-desc').textContent = project.desc;
+            
+            const progressSection = document.getElementById('info-progress-section');
+            if (project.hasProgressBar) {
+              progressSection.innerHTML = \`
+                <div>
+                  <div class="flex justify-between text-xs font-bold mb-1">
+                    <span>Overall Progress</span>
+                    <span id="info-progress-text" class="text-primary">\${project.progress}</span>
+                  </div>
+                  <div class="w-full bg-surface-variant rounded-full h-2">
+                    <div id="info-progress-bar" class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                  </div>
+                </div>
+              \`;
+              // Animate progress bar in next frame
+              setTimeout(() => {
+                const bar = document.getElementById('info-progress-bar');
+                if(bar) bar.style.width = project.progress;
+              }, 50);
+            } else {
+              progressSection.innerHTML = \`
+                <div>
+                  <div class="flex justify-between text-xs font-bold mb-1">
+                    <span>Status</span>
+                    <span id="info-progress-text" class="text-primary">\${project.progress}</span>
+                  </div>
+                </div>
+              \`;
+            }
+            
+            // Fade in
+            elementsToAnimate.forEach(el => {
+              if(el) el.style.opacity = '1';
+            });
+          }, 300);
+        }
+      });
+    });
   });
 </script>
 </body></html>
